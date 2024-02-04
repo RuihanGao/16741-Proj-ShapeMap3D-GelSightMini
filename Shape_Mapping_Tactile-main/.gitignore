@@ -1,0 +1,14 @@
+env/
+ycb/
+data/
+gelsight_data/
+generated_data/
+calib/
+models/
+processed_data/
+.vscode/
+*.asv
+*.png
+*.pyc
+**/.DS_Store
+**.pth.tar
