@@ -50,16 +50,21 @@ class heightMapGenerator:
         data_dict = scipy.io.loadmat(data_path)
         self.sample_points = data_dict['samplePoints'] # N+1 * 3
         self.sample_normals = data_dict['sampleNormals'] # N+1 * 3
-        self.numSamples = data_dict['numSamples'][0][0] # + 1 # N maybe need to fix this
+        self.numSamples = data_dict['numSamples'][0][0] # N maybe need to fix this
         print("Total sample poses #" + str(self.numSamples))
 
 
         # dense point cloud with vertice information
         ply_file = open(ply_path)
         lines = ply_file.readlines()
+        print(f"check lines[3]: {lines[3]}, split {lines[3].split(' ')}")
         verts_num = int(lines[3].split(' ')[-1])
-        verts_lines = lines[10:10 + verts_num]
-        vertices = np.array([list(map(float, l.strip().split(' '))) for l in verts_lines])
+        # find the first line that contains vertex information
+        for i in range(len(lines)):
+            if 'end_header' in lines[i]:
+                break
+        verts_lines = lines[i+1:i+1 + verts_num]
+        vertices = np.array([list(map(float, l.strip().split(' '))) for l in verts_lines])[:,0:3] # only need x,y,z
         self.all_points_hom = np.append(vertices, np.ones([len(vertices),1]),1) # homogenous coords
         print("Total .ply vertices #" + str(self.all_points_hom.shape[0]))
 
@@ -256,9 +261,9 @@ class heightMapGenerator:
         self.pose_file.close()
 
 if __name__ == "__main__":
-    # obj = 'power_drill'
-    obj =  'mustard_bottle'
+    # obj =  'mustard_bottle'
     # obj = 'ball'
+    obj = 'strawberry'
     data_path = osp.join('..','..','..','data',obj,obj+'_60sampled_python.mat') # load sampled points, normals
     ply_path = osp.join('..','..','..','data',obj,obj+'.ply') # load dense point cloud
     save_path = osp.join('..','..','..','processed_data',obj)

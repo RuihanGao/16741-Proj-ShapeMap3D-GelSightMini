@@ -563,7 +563,7 @@ def sample_model_points(obj, save_flag, verbose=False, ball_radius=None, hard_co
 
 
 if __name__ == "__main__": 
-    obj_name = "006_mustard_bottle"
+    obj_name = "012_strawberry" # "006_mustard_bottle"
     sample_model_points(obj_name, save_flag=True, verbose=False)
 
     # obj_name = "calib_ball"

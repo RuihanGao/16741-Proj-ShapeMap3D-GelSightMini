@@ -23,19 +23,16 @@ class gelsightSim:
         # meta data
         data_dict = scipy.io.loadmat(data_path)
         self.sample_points = data_dict['samplePoints'] # N+1 * 3
-        self.sameple_normals = data_dict['sampleNormals'] # N+1 * 3
-        self.numSamples = data_dict['numSamples'][0][0]# N maybe need to fix this
+        self.sample_normals = data_dict['sampleNormals'] # N+1 * 3
+        self.numSamples = data_dict['numSamples'][0][0] # N maybe need to fix this
         print("Total sample poses #" + str(self.numSamples))
-        # p = input("pause")
+
 
         # dense point cloud with vertice information
         ply_file = open(ply_path)
         lines = ply_file.readlines()
-
-        verts_num = int(lines[2].split(' ')[-1])
-        verts_lines = lines[14:14 + verts_num]
-        # verts_num = int(lines[3].split(' ')[-1])
-        # verts_lines = lines[10:10 + verts_num]
+        verts_num = int(lines[3].split(' ')[-1])
+        verts_lines = lines[10:10 + verts_num]
         vertices = np.array([list(map(float, l.strip().split(' '))) for l in verts_lines])
         vertices = vertices[:, 0:3]
         self.all_points_hom = np.append(vertices, np.ones([len(vertices),1]),1) # homogenous coords
@@ -93,7 +90,7 @@ class gelsightSim:
 
             ######## Generate ground truth heightmap, contact mask, poses from sample points
             cur_point = self.sample_points[i,:]
-            cur_normal = -1*self.sameple_normals[i,:]
+            cur_normal = -1*self.sample_normals[i,:]
             z_axis = np.array([0,0,1])
 
             T_wp = np.zeros((4,4)) # transform from point coord to world coord
